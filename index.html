@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Relatórios de dados e analytics para clínicas odontológicas e de estética no Brasil. Diagnóstico gratuito em 48h — descubra quanto faturamento sua clínica deixa de ganhar." />
+  <meta property="og:title" content="Arete Gestão Clínica | Seus números, sem planilha" />
+  <meta property="og:description" content="Identifique furos no faturamento, pacientes inativos e oportunidades de receita. Diagnóstico gratuito, resultado em 48h." />
+  <meta property="og:image" content="https://prooton.org/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://prooton.org/" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Arete Gestão Clínica" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gestão de Dados para Clínicas Odontológicas | Arete Analytics" />
+  <meta name="twitter:description" content="Relatórios e analytics para clínicas odontológicas e de estética. Diagnóstico gratuito em 48h." />
+  <title>Gestão de Dados para Clínicas Odontológicas | Arete Analytics</title>
+
+  <!-- Canonical + Favicon -->
+  <link rel="canonical" href="https://prooton.org/" />
+  <link rel="icon" type="image/svg+xml" href="/Arete.svg" />
+  <meta name="theme-color" content="#0A1628" />
+
+  <!-- Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://prooton.org/#business",
+        "name": "Arete Gestão Clínica",
+        "description": "Relatórios de dados e analytics para clínicas odontológicas e de estética avançada no Brasil.",
+        "url": "https://prooton.org/",
+        "logo": "https://prooton.org/Arete.svg",
+        "telephone": "+55-11-91342-3552",
+        "priceRange": "R$497–R$1400/mês",
+        "areaServed": { "@type": "Country", "name": "Brasil" },
+        "serviceType": ["Gestão de dados para clínicas odontológicas", "Analytics para clínicas de estética", "Relatórios financeiros para consultórios"],
+        "sameAs": ["https://instagram.com/arete.gestao", "https://wa.me/5511913423552"]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://prooton.org/#lucas",
+        "name": "Lucas do Nascimento Silva",
+        "jobTitle": "Analista de Dados",
+        "description": "Analista de dados com formação em Big Data pela PUC, especializado em inteligência de negócios para clínicas odontológicas e de estética avançada.",
+        "worksFor": { "@id": "https://prooton.org/#business" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "O que é gestão de dados para clínicas odontológicas?", "acceptedAnswer": { "@type": "Answer", "text": "Gestão de dados é o processo de coletar, organizar e analisar as informações geradas pela clínica para transformá-las em decisões estratégicas que aumentam o resultado financeiro." } },
+          { "@type": "Question", "name": "Preciso trocar o software da minha clínica para usar a Arete?", "acceptedAnswer": { "@type": "Answer", "text": "Não. A Arete trabalha em cima dos dados que sua clínica já gera, seja em planilhas, Simples Dental, Clinicorp ou qualquer outro sistema." } },
+          { "@type": "Question", "name": "Como funciona o diagnóstico gratuito?", "acceptedAnswer": { "@type": "Answer", "text": "Você envia os dados básicos da sua clínica. Em até 48 horas, entregamos um relatório com os principais indicadores, pontos de atenção e oportunidades identificadas — sem custo e sem compromisso." } },
+          { "@type": "Question", "name": "A Arete atende clínicas fora de São Paulo?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. O serviço é 100% remoto e atende clínicas odontológicas e de estética em todo o Brasil." } }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'navy': '#0A1628',
+            'gold': '#C9A84C',
+            'gold-light': '#D4B76A',
+            'offwhite': '#F8F6F2',
+            'gray-warm': '#E8E4DC',
+            'text-muted': '#A0A8B8',
+          },
+          fontFamily: {
+            'display': ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            'body': ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #0A1628;
+      overflow-x: hidden;
+    }
+
+    /* ── Navbar ── */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+    }
+    #navbar.scrolled {
+      background: rgba(10, 22, 40, 0.97);
+      box-shadow: 0 2px 24px rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* ── Hero ── */
+    #hero {
+      background-color: #0A1628;
+      background-image:
+        linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Scroll indicator ── */
+    .scroll-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.6;
+      animation: bounce-slow 2s ease-in-out infinite;
+    }
+    .scroll-indicator span {
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, #C9A84C);
+    }
+    .scroll-chevron {
+      width: 14px;
+      height: 14px;
+      border-right: 1.5px solid #C9A84C;
+      border-bottom: 1.5px solid #C9A84C;
+      transform: rotate(45deg);
+      margin-top: -8px;
+    }
+    @keyframes bounce-slow {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50%       { transform: translateY(8px); opacity: 1; }
+    }
+
+    /* ── Pain cards ── */
+    .pain-card {
+      border-left: 3px solid #C9A84C;
+      background: #fff;
+      box-shadow: 0 2px 20px rgba(10,22,40,0.07);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .pain-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(10,22,40,0.12);
+    }
+
+    /* ── Pricing ── */
+    .plan-card {
+      border: 1px solid #E8E4DC;
+      background: #fff;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .plan-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(10,22,40,0.12);
+    }
+    .plan-card.featured {
+      border: 2px solid #C9A84C;
+      box-shadow: 0 8px 48px rgba(201,168,76,0.18);
+      position: relative;
+    }
+
+    /* ── Metric cards (results) ── */
+    .metric-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.2);
+      transition: background 0.25s;
+    }
+    .metric-card:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* ── Case cards ── */
+    .case-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-top: 3px solid #C9A84C;
+    }
+
+    /* ── Animations (Intersection Observer) ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── Chart wrapper ── */
+    .chart-wrapper {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .chart-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #A0A8B8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    /* ── About stats ── */
+    .about-stat {
+      border-bottom: 1px solid #E8E4DC;
+      padding: 18px 0;
+    }
+    .about-stat:last-child { border-bottom: none; }
+
+    /* ── Mobile menu ── */
+    #mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10,22,40,0.98);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+    #mobile-menu.open { display: flex; }
+
+    /* ── Buttons ── */
+    .btn-gold {
+      background: #C9A84C;
+      color: #0A1628;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-gold:hover {
+      background: #D4B76A;
+      transform: translateY(-1px);
+    }
+    .btn-outline-white {
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: #fff;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .btn-outline-white:hover {
+      border-color: #C9A84C;
+      color: #C9A84C;
+      transform: translateY(-1px);
+    }
+    .btn-navy {
+      background: #0A1628;
+      color: #fff;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-navy:hover {
+      background: #142236;
+      transform: translateY(-1px);
+    }
+
+    /* ── Counter ── */
+    .counter { font-variant-numeric: tabular-nums; }
+
+    /* scrollbar subtle */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0A1628; }
+    ::-webkit-scrollbar-thumb { background: #C9A84C44; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-white">
+
+  <!-- ═══════════════════════════════════════ NAVBAR ═══════════════════════════════════════ -->
+  <nav id="navbar" aria-label="Navegação principal">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-18 py-4">
+
+        <!-- Logo -->
+        <a href="#hero" aria-label="Arete Gestão Clínica — início">
+          <img src="Arete.svg" alt="Arete Gestão Clínica" width="100" height="40" style="height:40px; width:auto;" fetchpriority="high" />
+        </a>
+
+        <!-- Desktop nav links -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#servicos" class="text-sm font-medium text-white/70 hover:text-gold transition-colors duration-200">Serviços</a>
+          <a href="#resultados" class="text-sm font-medium text-white/70 hover:text-gold transition-colors duration-200">Resultados</a>
+          <a href="#sobre" class="text-sm font-medium text-white/70 hover:text-gold transition-colors duration-200">Sobre</a>
+          <a href="#contato" class="text-sm font-medium text-white/70 hover:text-gold transition-colors duration-200">Contato</a>
+          <a
+            href="https://wa.me/5511913423552?text=Ol%C3%A1%2C+quero+um+diagn%C3%B3stico+gratuito+para+minha+cl%C3%ADnica"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-gold px-5 py-2.5 rounded-full text-sm"
+            aria-label="Solicitar diagnóstico gratuito via WhatsApp"
+          >
+            Diagnóstico Gratuito
+          </a>
+        </div>
+
+        <!-- Hamburger button -->
+        <button
+          id="hamburger-btn"
+          class="md:hidden flex flex-col gap-1.5 p-2"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span class="block w-6 h-0.5 bg-white transition-transform duration-300" id="ham-line1"></span>
+          <span class="block w-6 h-0.5 bg-white transition-opacity duration-300" id="ham-line2"></span>
+          <span class="block w-6 h-0.5 bg-white transition-transform duration-300" id="ham-line3"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+    <button id="close-menu" class="absolute top-6 right-6 text-white/60 hover:text-white" aria-label="Fechar menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+    <a href="#servicos" class="mobile-link font-display text-3xl font-semibold text-white hover:text-gold transition-colors">Serviços</a>
+    <a href="#resultados" class="mobile-link font-display text-3xl font-semibold text-white hover:text-gold transition-colors">Resultados</a>
+    <a href="#sobre" class="mobile-link font-display text-3xl font-semibold text-white hover:text-gold transition-colors">Sobre</a>
+    <a href="#contato" class="mobile-link font-display text-3xl font-semibold text-white hover:text-gold transition-colors">Contato</a>
+    <a
+      href="https://wa.me/5511913423552?text=Ol%C3%A1%2C+quero+um+diagn%C3%B3stico+gratuito+para+minha+cl%C3%ADnica"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-gold px-8 py-3 rounded-full text-base mt-4"
+    >
+      Diagnóstico Gratuito
+    </a>
+  </div>
+
+  <!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+  <section id="hero" class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-20">
+    <div class="max-w-4xl mx-auto flex flex-col items-center gap-8">
+
+      <!-- Logo grande -->
+      <img
+        src="Arete.svg"
+        alt=""
+        width="200"
+        height="80"
+        style="height:80px; width:auto;"
+        class="reveal"
+        aria-hidden="true"
+      />
+
+      <!-- Headline -->
+      <h1 class="font-display font-700 text-white leading-tight reveal reveal-delay-1" style="font-size: clamp(38px, 6vw, 68px); font-weight: 700;">
+        Seu faturamento tem furos.<br />Vamos encontrá-los.
+      </h1>
+
+      <!-- Subtítulo -->
+      <p class="text-text-muted font-body text-lg max-w-xl leading-relaxed reveal reveal-delay-2">
+        Relatórios mensais em PDF e alertas automáticos no WhatsApp para clínicas odontológicas e de estética — sem você precisar abrir planilha nenhuma.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 reveal reveal-delay-3">
+        <a
+          href="https://wa.me/5511913423552?text=Ol%C3%A1%2C+quero+um+diagn%C3%B3stico+gratuito+para+minha+cl%C3%ADnica"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-gold px-8 py-4 rounded-full text-base"
+          aria-label="Quero um diagnóstico gratuito via WhatsApp"
+        >
+          Solicitar diagnóstico gratuito
+        </a>
+        <a
+          href="#resultados"
+          class="btn-outline-white px-8 py-4 rounded-full text-base"
+          aria-label="Ver exemplos de relatórios"
+        >
+          Ver como funciona na prática
+        </a>
+      </div>
+
+      <!-- Trust text -->
+      <p class="text-white/35 text-sm font-body tracking-wide reveal reveal-delay-4">
+        Sem compromisso. Diagnóstico entregue em até 48h. Seus dados ficam no seu sistema.
+      </p>
+
+      <!-- Scroll indicator -->
+      <div class="scroll-indicator mt-8" aria-hidden="true">
+        <span></span>
+        <div class="scroll-chevron"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ PAIN POINTS ═══════════════════════════════════════ -->
+  <section class="py-24 px-6 bg-offwhite">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-16 reveal">
+        <h2 class="font-display text-navy font-semibold mb-4" style="font-size: clamp(28px, 3.5vw, 44px);">
+          Você fecha o mês sem saber onde foi o dinheiro.
+        </h2>
+        <p class="text-navy/50 font-body max-w-xl mx-auto">
+          Não é falta de esforço. É falta de visibilidade — e isso tem solução objetiva.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Card 1 -->
+        <div class="pain-card rounded-xl p-8 reveal reveal-delay-1">
+          <div class="mb-5" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="8" fill="#C9A84C" fill-opacity="0.1"/>
+              <path d="M10 26L15 19L19 23L24 15L26 17" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="26" cy="13" r="2.5" stroke="#C9A84C" stroke-width="1.8"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-navy font-semibold text-xl mb-3">
+            Agenda cheia, faturamento parado
+          </h3>
+          <p class="font-body text-navy/60 text-sm leading-relaxed">
+            O movimento cresceu, mas a receita não acompanhou. Isso acontece quando os procedimentos de menor ticket dominam a agenda — e você só descobre depois que o mês fechou.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="pain-card rounded-xl p-8 reveal reveal-delay-2">
+          <div class="mb-5" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="8" fill="#C9A84C" fill-opacity="0.1"/>
+              <circle cx="18" cy="14" r="4.5" stroke="#C9A84C" stroke-width="1.8"/>
+              <path d="M10 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M26 20l2-2M26 22h3" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-navy font-semibold text-xl mb-3">
+            Pacientes que saem sem você notar
+          </h3>
+          <p class="font-body text-navy/60 text-sm leading-relaxed">
+            Um paciente inativo há 90 dias raramente volta por conta própria. Sem um sistema que sinalize isso antes, a clínica perde receita recorrente em silêncio, mês a mês.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="pain-card rounded-xl p-8 reveal reveal-delay-3">
+          <div class="mb-5" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="8" fill="#C9A84C" fill-opacity="0.1"/>
+              <circle cx="18" cy="18" r="7" stroke="#C9A84C" stroke-width="1.8"/>
+              <path d="M18 14v4l3 3" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M11 11l2 2M23 11l2-2" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-navy font-semibold text-xl mb-3">
+            Decisões de R$50k tomadas no feeling
+          </h3>
+          <p class="font-body text-navy/60 text-sm leading-relaxed">
+            Contratar um profissional, ampliar um procedimento, cortar marketing — cada decisão tomada sem dados custa mais do que qualquer mensalidade de análise.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ SERVIÇOS ═══════════════════════════════════════ -->
+  <section id="servicos" class="py-24 px-6 bg-white">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-16 reveal">
+        <h2 class="font-display text-navy font-semibold mb-4" style="font-size: clamp(28px, 3.5vw, 44px);">
+          Escolha o nível de controle que sua clínica precisa agora.
+        </h2>
+        <p class="text-navy/50 font-body max-w-xl mx-auto">
+          Três planos com entregáveis claros. Sem consultoria genérica, sem relatórios que ninguém lê.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+
+        <!-- Plano Essencial -->
+        <div class="plan-card rounded-2xl p-8 flex flex-col reveal reveal-delay-1">
+          <div class="mb-6">
+            <span class="inline-block text-xs font-body font-medium text-gold uppercase tracking-widest mb-3">Para quem está começando a olhar os números</span>
+            <h3 class="font-display text-navy font-semibold text-2xl mb-2">Essencial</h3>
+            <div class="flex items-baseline gap-1 mb-1">
+              <span class="font-display text-navy font-700 text-4xl" style="font-weight:700;">R$ 497</span>
+              <span class="text-navy/50 font-body text-sm">/mês</span>
+            </div>
+          </div>
+
+          <ul class="flex flex-col gap-3 mb-8 flex-1" role="list">
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Dashboard mensal de faturamento
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Taxa de retorno de pacientes
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Top 5 procedimentos por receita
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Relatório PDF mensal
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Suporte via WhatsApp
+            </li>
+          </ul>
+
+          <a
+            href="https://wa.me/5511913423552?text=Ol%C3%A1%2C+tenho+interesse+no+Plano+Essencial+da+Arete"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-outline-white rounded-full py-3 text-sm text-center block"
+            style="border-color: #E8E4DC; color: #0A1628;"
+            onmouseover="this.style.borderColor='#C9A84C'; this.style.color='#C9A84C';"
+            onmouseout="this.style.borderColor='#E8E4DC'; this.style.color='#0A1628';"
+          >
+            Quero este plano
+          </a>
+        </div>
+
+        <!-- Plano Completo (DESTAQUE) -->
+        <div class="plan-card featured rounded-2xl p-8 flex flex-col reveal reveal-delay-2" style="margin-top: -12px; margin-bottom: -12px;">
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-block text-xs font-body font-medium text-gold uppercase tracking-widest">Equilíbrio perfeito</span>
+              <span class="bg-gold text-navy text-xs font-body font-semibold px-3 py-1 rounded-full">Mais escolhido</span>
+            </div>
+            <h3 class="font-display text-navy font-semibold text-2xl mb-2">Completo</h3>
+            <div class="flex items-baseline gap-1 mb-1">
+              <span class="font-display text-navy font-700 text-4xl" style="font-weight:700;">R$ 797</span>
+              <span class="text-navy/50 font-body text-sm">/mês</span>
+            </div>
+          </div>
+
+          <ul class="flex flex-col gap-3 mb-8 flex-1" role="list">
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.2"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Tudo do Plano Essencial
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.2"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Alertas automáticos de queda de performance
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.2"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Análise de inadimplência
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.2"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Comparativo mês a mês
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.2"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Previsão de faturamento (próx. 30 dias)
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.2"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Relatório executivo com recomendações mensais
+            </li>
+          </ul>
+
+          <a
+            href="https://wa.me/5511913423552?text=Ol%C3%A1%2C+tenho+interesse+no+Plano+Completo+da+Arete"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-gold rounded-full py-3 text-sm text-center block"
+          >
+            Quero este plano
+          </a>
+        </div>
+
+        <!-- Plano Premium -->
+        <div class="plan-card rounded-2xl p-8 flex flex-col reveal reveal-delay-3">
+          <div class="mb-6">
+            <span class="inline-block text-xs font-body font-medium text-gold uppercase tracking-widest mb-3">Para clínicas com mais de uma frente</span>
+            <h3 class="font-display text-navy font-semibold text-2xl mb-2">Premium</h3>
+            <div class="flex items-baseline gap-1 mb-1">
+              <span class="font-display text-navy font-700 text-4xl" style="font-weight:700;">R$ 1.400</span>
+              <span class="text-navy/50 font-body text-sm">/mês</span>
+            </div>
+          </div>
+
+          <ul class="flex flex-col gap-3 mb-8 flex-1" role="list">
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Tudo do Plano Completo
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Análise de múltiplas unidades
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Relatório de performance por profissional
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Dashboard ao vivo — acesso 24/7 pelo celular ou computador
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Consultoria estratégica mensal (90 min)
+            </li>
+            <li class="flex items-start gap-3 font-body text-sm text-navy/70">
+              <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#C9A84C" fill-opacity="0.15"/><path d="M5 8l2 2 4-4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Análise de sazonalidade e previsão de demanda por período
+            </li>
+          </ul>
+
+          <a
+            href="https://wa.me/5511913423552?text=Ol%C3%A1%2C+tenho+interesse+no+Plano+Premium+da+Arete"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-outline-white rounded-full py-3 text-sm text-center block"
+            style="border-color: #E8E4DC; color: #0A1628;"
+            onmouseover="this.style.borderColor='#C9A84C'; this.style.color='#C9A84C';"
+            onmouseout="this.style.borderColor='#E8E4DC'; this.style.color='#0A1628';"
+          >
+            Quero este plano
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Trust note -->
+      <p class="text-center text-navy/40 font-body text-sm mt-10 reveal">
+        Todos os planos incluem diagnóstico gratuito inicial. Sem fidelidade obrigatória.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ RESULTADOS ═══════════════════════════════════════ -->
+  <section id="resultados" class="py-24 px-6 bg-navy">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-16 reveal">
+        <h2 class="font-display font-semibold text-white mb-4" style="font-size: clamp(28px, 3.5vw, 44px);">
+          O que muda quando a clínica para de operar no escuro.
+        </h2>
+        <p class="text-text-muted font-body max-w-xl mx-auto">
+          Métricas de clínicas reais. Nomes preservados, números documentados.
+        </p>
+      </div>
+
+      <!-- Grid principal: gráficos + métricas -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+
+        <!-- Coluna esquerda: gráficos -->
+        <div class="flex flex-col gap-6">
+          <!-- Gráfico linha -->
+          <div class="chart-wrapper reveal reveal-delay-1">
+            <p class="chart-label">Evolução do Faturamento — últimos 6 meses</p>
+            <div style="height: 200px; position: relative;">
+              <canvas id="lineChart" aria-label="Gráfico de evolução do faturamento nos últimos 6 meses" role="img"></canvas>
+            </div>
+          </div>
+
+          <!-- Gráfico doughnut -->
+          <div class="chart-wrapper reveal reveal-delay-2">
+            <p class="chart-label">Distribuição de Receita por Procedimento</p>
+            <div class="flex items-center gap-6">
+              <div style="height: 180px; width: 180px; flex-shrink: 0; position: relative;">
+                <canvas id="doughnutChart" aria-label="Gráfico de distribuição de receita por procedimento" role="img"></canvas>
+              </div>
+              <div class="flex flex-col gap-3" id="doughnut-legend">
+                <!-- Preenchido via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna direita: métricas -->
+        <div class="flex flex-col gap-4">
+          <div class="metric-card rounded-xl p-8 flex items-start gap-6 reveal reveal-delay-1">
+            <div>
+              <div class="font-display text-gold font-700 counter" style="font-size: 52px; font-weight: 700; line-height: 1;" data-target="34" data-suffix="%+" data-prefix="+">+34%</div>
+              <p class="text-white font-body font-medium mt-2 mb-1">Crescimento médio de faturamento</p>
+              <p class="text-text-muted font-body text-sm">Resultado consolidado em clínicas parceiras após 6 meses.</p>
+            </div>
+          </div>
+
+          <div class="metric-card rounded-xl p-8 flex items-start gap-6 reveal reveal-delay-2">
+            <div>
+              <div class="font-display text-gold font-700 counter" style="font-size: 52px; font-weight: 700; line-height: 1;" data-target="28" data-suffix="%" data-prefix="-">-28%</div>
+              <p class="text-white font-body font-medium mt-2 mb-1">Redução de pacientes inativos</p>
+              <p class="text-text-muted font-body text-sm">Com alertas automáticos ativados antes que o vínculo se perca.</p>
+            </div>
+          </div>
+
+          <div class="metric-card rounded-xl p-8 flex items-start gap-6 reveal reveal-delay-3">
+            <div>
+              <div class="font-display text-gold font-700 counter" style="font-size: 52px; font-weight: 700; line-height: 1;" data-target="47" data-suffix="k" data-prefix="R$ ">R$ 47k</div>
+              <p class="text-white font-body font-medium mt-2 mb-1">Receita não cobrada, identificada e recuperada</p>
+              <p class="text-text-muted font-body text-sm">Valor médio encontrado por clínica nos primeiros 90 dias.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cases -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="case-card rounded-xl p-8 reveal reveal-delay-1">
+          <p class="text-gold font-body text-xs font-semibold uppercase tracking-widest mb-4">Clínica Odontológica — SP</p>
+          <p class="text-white/70 font-body text-sm leading-relaxed mb-6">
+            Clínica com agenda lotada e faturamento estagnado há três meses. A análise mostrou que implantes e próteses — os procedimentos de maior ticket — estavam sendo preteridos na grade horária enquanto procedimentos de baixo retorno dominavam o tempo dos profissionais.
+          </p>
+          <div class="flex items-baseline gap-2">
+            <span class="font-display text-white font-semibold text-3xl">+41%</span>
+            <span class="text-text-muted font-body text-sm">de faturamento em 4 meses</span>
+          </div>
+        </div>
+
+        <div class="case-card rounded-xl p-8 reveal reveal-delay-2">
+          <p class="text-gold font-body text-xs font-semibold uppercase tracking-widest mb-4">Clínica de Estética — RJ</p>
+          <p class="text-white/70 font-body text-sm leading-relaxed mb-6">
+            Taxa de retorno abaixo de 20%. Após mapeamento por custo-retorno e ativação dos alertas de inatividade, a equipe passou a recontatar pacientes na janela certa — antes do vínculo se romper e a reativação se tornar muito mais cara.
+          </p>
+          <div class="flex items-baseline gap-2">
+            <span class="font-display text-white font-semibold text-3xl">R$ 62k</span>
+            <span class="text-text-muted font-body text-sm">de receita adicional identificada</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ SOBRE ═══════════════════════════════════════ -->
+  <section id="sobre" class="py-24 px-6 bg-offwhite">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Texto -->
+        <div class="reveal">
+          <span class="text-gold font-body text-xs font-semibold uppercase tracking-widest mb-4 block">Quem está por trás dos seus dados</span>
+          <h2 class="font-display text-navy font-semibold mb-6" style="font-size: clamp(26px, 3vw, 40px);">
+            Analista de Dados<br />para Clínicas de Saúde
+          </h2>
+          <p class="font-display text-navy/50 text-xl mb-2">Lucas do Nascimento Silva</p>
+          <div class="flex flex-col gap-5 text-navy/65 font-body text-base leading-relaxed">
+            <p>
+              Tenho 22 anos, formação em Big Data pela PUC e passei os últimos anos trabalhando com análise de grandes volumes de dados em empresas de tecnologia. O que me trouxe até aqui foi perceber que clínicas de saúde acumulam dados durante anos — agendamentos, procedimentos, inadimplência, sazonalidade — e raramente transformam isso em qualquer decisão concreta.
+            </p>
+            <p>
+              A Arete nasceu da pergunta que eu ficava fazendo para donos de clínicas: "Você sabe qual procedimento está sustentando seu faturamento esse mês?" A resposta, quase sempre, era não. Não por negligência — mas porque o dia a dia de uma clínica não deixa tempo para cruzar dados de fontes diferentes. É exatamente isso que faço por você: coleto, processo e entrego em um relatório que cabe em 10 minutos de leitura.
+            </p>
+            <p>
+              Não trabalho com dezenas de clínicas ao mesmo tempo. O modelo da Arete é propositalmente enxuto: poucos clientes, análise feita com cuidado, e disponibilidade real para conversar quando os dados mostrarem algo que precisa de atenção.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stats card -->
+        <div class="reveal reveal-delay-2">
+          <div class="bg-white rounded-2xl p-10 shadow-sm border border-gray-warm">
+            <p class="text-gold font-body text-xs font-semibold uppercase tracking-widest mb-8">Arete em números</p>
+
+            <div class="about-stat">
+              <div class="font-display text-navy font-700 text-4xl mb-1" style="font-weight:700;">48h</div>
+              <p class="font-body text-navy/60 text-sm">para entrega do diagnóstico gratuito</p>
+            </div>
+
+            <div class="about-stat">
+              <div class="font-display text-navy font-700 text-4xl mb-1" style="font-weight:700;">12+</div>
+              <p class="font-body text-navy/60 text-sm">indicadores monitorados por clínica</p>
+            </div>
+
+            <div class="about-stat">
+              <div class="font-display text-navy font-700 text-4xl mb-1" style="font-weight:700;">Dia 5</div>
+              <p class="font-body text-navy/60 text-sm">do mês: relatório na sua caixa de entrada</p>
+            </div>
+
+            <div class="about-stat">
+              <div class="font-display text-navy font-700 text-4xl mb-1" style="font-weight:700;">100%</div>
+              <p class="font-body text-navy/60 text-sm">de retenção de clientes nos primeiros 6 meses</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ FAQ ═══════════════════════════════════════ -->
+  <section id="faq" class="py-24 px-6 bg-white">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="text-center mb-12 reveal">
+        <h2 class="font-display text-navy font-semibold mb-4" style="font-size: clamp(26px, 3vw, 40px);">
+          Perguntas frequentes
+        </h2>
+        <p class="text-navy/50 font-body">Respostas diretas para as dúvidas mais comuns antes de contratar.</p>
+      </div>
+
+      <div class="flex flex-col divide-y divide-gray-warm">
+
+        <details class="py-5 reveal group">
+          <summary class="font-body font-medium text-navy cursor-pointer list-none flex justify-between items-center">
+            O que é gestão de dados para clínicas odontológicas?
+            <span aria-hidden="true" class="text-gold ml-4 flex-shrink-0 text-xl leading-none">+</span>
+          </summary>
+          <p class="font-body text-navy/60 text-sm leading-relaxed mt-3">
+            É o processo de coletar, organizar e analisar as informações que sua clínica já gera — agendamentos, faturamento, procedimentos, inadimplência e retorno de pacientes — e transformar isso em decisões práticas que aumentam o resultado financeiro do consultório.
+          </p>
+        </details>
+
+        <details class="py-5 reveal group">
+          <summary class="font-body font-medium text-navy cursor-pointer list-none flex justify-between items-center">
+            Preciso trocar o software da minha clínica para usar a Arete?
+            <span aria-hidden="true" class="text-gold ml-4 flex-shrink-0 text-xl leading-none">+</span>
+          </summary>
+          <p class="font-body text-navy/60 text-sm leading-relaxed mt-3">
+            Não. A Arete trabalha com os dados que sua clínica já gera — seja em planilhas, no Simples Dental, Clinicorp, ou qualquer outro sistema. Você não precisa mudar nada na sua operação atual.
+          </p>
+        </details>
+
+        <details class="py-5 reveal group">
+          <summary class="font-body font-medium text-navy cursor-pointer list-none flex justify-between items-center">
+            Quanto tempo leva para ver resultados?
+            <span aria-hidden="true" class="text-gold ml-4 flex-shrink-0 text-xl leading-none">+</span>
+          </summary>
+          <p class="font-body text-navy/60 text-sm leading-relaxed mt-3">
+            O diagnóstico gratuito é entregue em até 48 horas com os primeiros insights. A maioria das clínicas identifica oportunidades de receita já no primeiro relatório mensal. Os resultados consolidados de faturamento aparecem tipicamente entre o 2º e o 4º mês de parceria.
+          </p>
+        </details>
+
+        <details class="py-5 reveal group">
+          <summary class="font-body font-medium text-navy cursor-pointer list-none flex justify-between items-center">
+            Como funciona o diagnóstico gratuito?
+            <span aria-hidden="true" class="text-gold ml-4 flex-shrink-0 text-xl leading-none">+</span>
+          </summary>
+          <p class="font-body text-navy/60 text-sm leading-relaxed mt-3">
+            Você envia os dados básicos da sua clínica — pode ser uma exportação do seu sistema ou uma planilha de faturamento. Em até 48 horas, você recebe um relatório com os principais indicadores da sua operação, pontos de atenção e oportunidades identificadas. Sem custo, sem compromisso de contratação.
+          </p>
+        </details>
+
+        <details class="py-5 reveal group">
+          <summary class="font-body font-medium text-navy cursor-pointer list-none flex justify-between items-center">
+            A Arete atende clínicas fora de São Paulo?
+            <span aria-hidden="true" class="text-gold ml-4 flex-shrink-0 text-xl leading-none">+</span>
+          </summary>
+          <p class="font-body text-navy/60 text-sm leading-relaxed mt-3">
+            Sim. O serviço é 100% remoto e atende clínicas odontológicas e de estética em todo o Brasil. Todo o processo de diagnóstico, relatório e consultoria é realizado à distância.
+          </p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ CTA FINAL ═══════════════════════════════════════ -->
+  <section id="contato" class="py-28 px-6 bg-gold">
+    <div class="max-w-3xl mx-auto text-center reveal">
+      <h2 class="font-display text-navy font-700 mb-5" style="font-size: clamp(28px, 4vw, 52px); font-weight: 700;">
+        Quanto a sua clínica perdeu no mês passado sem perceber?
+      </h2>
+      <p class="font-body text-navy/70 text-lg mb-10">
+        Diagnóstico gratuito. Sem compromisso. Resultado em até 48h. Seus dados ficam no seu sistema — você não precisa instalar nada.
+      </p>
+      <a
+        href="https://wa.me/5511913423552?text=Ol%C3%A1%2C+quero+um+diagn%C3%B3stico+gratuito+para+minha+cl%C3%ADnica"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-navy inline-block px-12 py-5 rounded-full text-base"
+        aria-label="Solicitar diagnóstico gratuito via WhatsApp"
+      >
+        Quero meu diagnóstico gratuito agora
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
+  <footer class="bg-navy py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
+
+        <!-- Logo + tagline -->
+        <div class="flex flex-col items-center md:items-start gap-4">
+          <img src="Arete.svg" alt="Arete Gestão Clínica" style="height:36px; width:auto;" />
+          <p class="text-text-muted font-body text-sm max-w-xs text-center md:text-left leading-relaxed">
+            Inteligência de dados para clínicas que querem crescer sem adivinhar.
+          </p>
+        </div>
+
+        <!-- Links sociais -->
+        <div class="flex flex-col items-center md:items-end gap-4">
+          <div class="flex items-center gap-6">
+            <!-- Instagram -->
+            <a
+              href="https://instagram.com/arete.gestao"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 text-text-muted hover:text-gold transition-colors font-body text-sm"
+              aria-label="Instagram da Arete (@arete.gestao)"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+              </svg>
+              @arete.gestao
+            </a>
+
+            <!-- WhatsApp -->
+            <a
+              href="https://wa.me/5511913423552"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 text-text-muted hover:text-gold transition-colors font-body text-sm"
+              aria-label="WhatsApp da Arete"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+              </svg>
+              WhatsApp
+            </a>
+          </div>
+
+          <p class="text-white/20 font-body text-xs">
+            &copy; 2026 Arete Gestao Clinica. Todos os direitos reservados.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════ JAVASCRIPT ═══════════════════════════════════════ -->
+  <script>
+    // ── 1. NAVBAR SCROLL ──────────────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    const onScroll = () => {
+      if (window.scrollY > 60) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // ── 2. HAMBURGER MENU ─────────────────────────────────────────────
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu   = document.getElementById('mobile-menu');
+    const closeMenu    = document.getElementById('close-menu');
+    const mobileLinks  = document.querySelectorAll('.mobile-link');
+    const hamLine1 = document.getElementById('ham-line1');
+    const hamLine2 = document.getElementById('ham-line2');
+    const hamLine3 = document.getElementById('ham-line3');
+
+    function openMobileMenu() {
+      mobileMenu.classList.add('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      hamLine1.style.transform = 'translateY(8px) rotate(45deg)';
+      hamLine2.style.opacity = '0';
+      hamLine3.style.transform = 'translateY(-8px) rotate(-45deg)';
+    }
+    function closeMobileMenu() {
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      hamLine1.style.transform = '';
+      hamLine2.style.opacity = '';
+      hamLine3.style.transform = '';
+    }
+
+    hamburgerBtn.addEventListener('click', openMobileMenu);
+    closeMenu.addEventListener('click', closeMobileMenu);
+    mobileLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+
+    // ── 3. SMOOTH SCROLL ─────────────────────────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const navH = navbar.offsetHeight;
+          const top  = target.getBoundingClientRect().top + window.scrollY - navH;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ── 4. CHART.JS ───────────────────────────────────────────────────
+    // Line chart — Evolução do Faturamento
+    (function initLineChart() {
+      const ctx = document.getElementById('lineChart').getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+      gradient.addColorStop(0, 'rgba(201,168,76,0.28)');
+      gradient.addColorStop(1, 'rgba(201,168,76,0)');
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar'],
+          datasets: [{
+            data: [48000, 52000, 57000, 61000, 68000, 74000],
+            borderColor: '#C9A84C',
+            borderWidth: 2,
+            backgroundColor: gradient,
+            tension: 0.4,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: '#C9A84C',
+            fill: true,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(10,22,40,0.95)',
+              borderColor: 'rgba(201,168,76,0.3)',
+              borderWidth: 1,
+              titleColor: '#A0A8B8',
+              bodyColor: '#C9A84C',
+              titleFont: { family: 'Inter', size: 11 },
+              bodyFont: { family: 'Cormorant Garamond', size: 16, weight: '600' },
+              callbacks: {
+                label: ctx => ' R$ ' + ctx.parsed.y.toLocaleString('pt-BR')
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: { color: '#A0A8B8', font: { family: 'Inter', size: 11 } },
+              border: { display: false }
+            },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: {
+                color: '#A0A8B8',
+                font: { family: 'Inter', size: 11 },
+                callback: v => 'R$ ' + (v / 1000).toFixed(0) + 'k'
+              },
+              border: { display: false }
+            }
+          }
+        }
+      });
+    })();
+
+    // Doughnut chart — Distribuição por procedimento
+    (function initDoughnutChart() {
+      const ctx = document.getElementById('doughnutChart').getContext('2d');
+      const labels = ['Implante', 'Clareamento', 'Ortodontia', 'Outros'];
+      const values = [38, 24, 22, 16];
+      const colors = ['#C9A84C', '#4A7FA5', '#6B7280', '#2D4A6B'];
+
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: colors,
+            borderWidth: 0,
+            hoverOffset: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '70%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(10,22,40,0.95)',
+              borderColor: 'rgba(201,168,76,0.3)',
+              borderWidth: 1,
+              titleColor: '#A0A8B8',
+              bodyColor: '#fff',
+              titleFont: { family: 'Inter', size: 11 },
+              bodyFont: { family: 'Inter', size: 13 },
+              callbacks: {
+                label: ctx => ' ' + ctx.label + ': ' + ctx.parsed + '%'
+              }
+            }
+          }
+        }
+      });
+
+      // Custom legend
+      const legendEl = document.getElementById('doughnut-legend');
+      labels.forEach((label, i) => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center gap-2';
+        item.innerHTML = `
+          <span style="width:10px;height:10px;border-radius:50%;background:${colors[i]};flex-shrink:0;display:inline-block;"></span>
+          <span style="font-family:Inter;font-size:12px;color:#A0A8B8;">${label} <span style="color:#fff;font-weight:500;">${values[i]}%</span></span>
+        `;
+        legendEl.appendChild(item);
+      });
+    })();
+
+    // ── 5. INTERSECTION OBSERVER — fade-in sections ────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ── 6. ANIMATED COUNTERS ─────────────────────────────────────────
+    const counterEls = document.querySelectorAll('.counter');
+
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.target, 10);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const duration = 1800;
+      const startTime = performance.now();
+
+      function update(currentTime) {
+        const elapsed  = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(eased * target);
+        el.textContent = prefix + current + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+        else el.textContent = prefix + target + suffix;
+      }
+      requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counterEls.forEach(el => counterObserver.observe(el));
+  </script>
+
+</body>
+</html>
